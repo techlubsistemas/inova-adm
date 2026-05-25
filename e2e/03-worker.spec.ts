@@ -8,8 +8,20 @@ import { apiCtx, findIdByName } from "./helpers/api-cleanup";
 
 const TAG = `E2E-${Date.now()}`;
 
+/**
+ * CPF único por run (11 dígitos). Combina os últimos 8 dígitos do timestamp
+ * + 3 dígitos randômicos. Evita colisão de UNIQUE constraint em workers.cpf
+ * caso cleanup falhe em runs anteriores.
+ */
+function uniqueCpf(): string {
+  const ts = String(Date.now()).slice(-8);
+  const rand = String(Math.floor(Math.random() * 1000)).padStart(3, "0");
+  return ts + rand;
+}
+
 test("Worker — criar com todos os campos básicos", async ({ page }) => {
   const name = `Colaborador ${TAG}`;
+  const cpf = uniqueCpf();
   await page.goto("/usuarios");
   await expect(page.getByRole("heading", { name: /usuários/i })).toBeVisible();
 
@@ -20,7 +32,7 @@ test("Worker — criar com todos os campos básicos", async ({ page }) => {
   // Usa placeholders exatos
   await dialog.getByPlaceholder("Nome do colaborador").fill(name);
   await dialog.getByPlaceholder("(00) 00000-0000").fill("11999990000");
-  await dialog.getByPlaceholder("000.000.000-00").fill("12345678901");
+  await dialog.getByPlaceholder("000.000.000-00").fill(cpf);
   await dialog.getByPlaceholder("RG", { exact: true }).fill("11.222.333-4");
   await dialog.getByPlaceholder("Rua, número").fill("Rua Teste, 123");
   await dialog.getByPlaceholder("Bairro", { exact: true }).fill("Centro");
