@@ -119,12 +119,12 @@ export function EquipmentHeader({ equipment, loading }: EquipmentHeaderProps) {
             <Download className="h-4 w-4" />
             Exportar
           </button>
-          <button
-            type="button"
+          <Link
+            href={`/equipamentos/${equipment.id}/editar`}
             className="bg-primary hover:bg-primary/90 flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors"
           >
             Editar
-          </button>
+          </Link>
         </div>
       </div>
     </div>

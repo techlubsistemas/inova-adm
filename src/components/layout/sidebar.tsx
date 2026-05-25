@@ -11,13 +11,19 @@ import { useAdminProfile } from "@/hooks/useAdminProfile";
 import { cn } from "@/lib/utils";
 import {
   AlertTriangle,
+  Boxes,
   CalendarDays,
   ChevronLeft,
   ClipboardList,
+  Hammer,
+  LayoutGrid,
   Lock,
   LogOut,
+  Map,
   Menu,
+  Network,
   Route,
+  Sliders,
   Users,
   Wrench,
 } from "lucide-react";
@@ -26,7 +32,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
 const menuItems = [
+  { icon: Network, label: "Estrutura", href: "/estrutura", enabled: true },
   { icon: Wrench, label: "Equipamentos", href: "/equipamentos", enabled: true },
+  { icon: Boxes, label: "Modelos", href: "/modelos", enabled: true },
+  { icon: Map, label: "Áreas", href: "/areas", enabled: true },
+  { icon: LayoutGrid, label: "Setores", href: "/setores", enabled: true },
+  { icon: Hammer, label: "Serviços", href: "/servicos", enabled: true },
   { icon: Route, label: "Planejamento", href: "/planejamento", enabled: true },
   {
     icon: CalendarDays,
@@ -47,6 +58,7 @@ const menuItems = [
     enabled: true,
   },
   { icon: Users, label: "Usuários", href: "/usuarios", enabled: true },
+  { icon: Sliders, label: "Parâmetros", href: "/parametros", enabled: true },
 ];
 
 export function Sidebar() {

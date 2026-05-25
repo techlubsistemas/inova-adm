@@ -1,11 +1,13 @@
 "use client";
 
+import { XlsxImportButton } from "@/components/cadastros/XlsxImportButton";
 import { EquipmentFilters } from "@/components/equipment/equipment-filters";
 import { EquipmentTable } from "@/components/equipment/equipment-table";
 import { useApiContext } from "@/context/ApiContext";
 import { useCompany } from "@/context/CompanyContext";
 import type { EquipmentFromApi, EquipmentListResponse } from "@/lib/equipment-types";
 import { Plus } from "lucide-react";
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -93,13 +95,14 @@ export default function EquipamentosPage() {
             <strong className="text-slate-900">{filteredCount}</strong>{" "}
             {filteredCount === 1 ? "equipamento" : "equipamentos"}
           </span>
-          <button
-            type="button"
+          <XlsxImportButton entityKind="equipment" onImported={fetchEquipments} />
+          <Link
+            href="/equipamentos/criar"
             className="bg-primary hover:bg-primary/90 flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors"
           >
             <Plus className="h-4 w-4" />
             Novo Equipamento
-          </button>
+          </Link>
         </div>
       </div>
 

@@ -2,7 +2,11 @@
 
 import { AdminsTable, type AdminRow } from "@/components/users/admins-table";
 import { CreateAdminDialog } from "@/components/users/create-admin-dialog";
-import { CreateWorkerDialog } from "@/components/users/create-worker-dialog";
+import {
+  CreateWorkerDialog,
+  type WorkerFormData,
+  type WorkerInitialData,
+} from "@/components/users/create-worker-dialog";
 import { TempPasswordDialog } from "@/components/users/temp-password-dialog";
 import { WorkersTable, type WorkerRow } from "@/components/users/workers-table";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -14,7 +18,7 @@ import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function UsuariosPage() {
-  const { GetAPI, PostAPI, PatchAPI } = useApiContext();
+  const { GetAPI, PostAPI, PutAPI, PatchAPI } = useApiContext();
   const { isSuperAdmin, selectedCompanyId, companies } = useCompany();
 
   // Workers state
@@ -24,6 +28,8 @@ export default function UsuariosPage() {
   const [workerSearch, setWorkerSearch] = useState("");
   const [showCreateWorker, setShowCreateWorker] = useState(false);
   const [creatingWorker, setCreatingWorker] = useState(false);
+  const [editingWorker, setEditingWorker] = useState<WorkerInitialData | null>(null);
+  const [savingWorker, setSavingWorker] = useState(false);
 
   // Admins state
   const [admins, setAdmins] = useState<AdminRow[]>([]);
@@ -81,7 +87,7 @@ export default function UsuariosPage() {
 
   // ── Create Worker ──
 
-  async function handleCreateWorker(data: Record<string, string | undefined>) {
+  async function handleCreateWorker(data: WorkerFormData) {
     setCreatingWorker(true);
     const companyId = isSuperAdmin ? selectedCompanyId : undefined;
     const payload = { ...data, companyId };
@@ -95,6 +101,23 @@ export default function UsuariosPage() {
       fetchWorkers();
     } else {
       toast.error(res.body?.message || "Erro ao criar colaborador.");
+    }
+  }
+
+  async function handleEditWorker(data: WorkerFormData) {
+    if (!editingWorker?.id) return;
+    setSavingWorker(true);
+    const companyId = isSuperAdmin ? selectedCompanyId : undefined;
+    const payload = { ...data, companyId };
+    const res = await PutAPI(`/workers/${editingWorker.id}`, payload, true);
+    setSavingWorker(false);
+
+    if (res.status === 200 || res.status === 201) {
+      setEditingWorker(null);
+      toast.success("Colaborador atualizado.");
+      fetchWorkers();
+    } else {
+      toast.error(res.body?.message || "Erro ao atualizar colaborador.");
     }
   }
 
@@ -191,6 +214,21 @@ export default function UsuariosPage() {
               error={workersError}
               search={workerSearch}
               onReissue={(w) => setReissueTarget({ id: w.id, name: w.name, type: "worker" })}
+              onEdit={(w) => setEditingWorker({
+                id: w.id,
+                name: w.name,
+                phone: w.phone,
+                cpf: w.cpf ?? "",
+                rg: w.rg ?? "",
+                address: w.address ?? "",
+                neighborhood: w.neighborhood ?? "",
+                city: w.city,
+                state: w.state ?? "",
+                zipCode: w.zipCode ?? "",
+                extension: w.extension ?? "",
+                accessLevelId: w.accessLevelId ?? null,
+                workerRoleIds: w.workerRoleIds ?? [],
+              })}
             />
           </div>
         </TabsContent>
@@ -239,6 +277,16 @@ export default function UsuariosPage() {
         onOpenChange={setShowCreateWorker}
         onSubmit={handleCreateWorker}
         isSubmitting={creatingWorker}
+      />
+
+      <CreateWorkerDialog
+        open={!!editingWorker}
+        onOpenChange={(open) => {
+          if (!open) setEditingWorker(null);
+        }}
+        onSubmit={handleEditWorker}
+        isSubmitting={savingWorker}
+        initialData={editingWorker}
       />
 
       <CreateAdminDialog

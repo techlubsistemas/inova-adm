@@ -9,14 +9,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { KeyRound, Loader2 } from "lucide-react";
+import { Edit2, KeyRound, Loader2 } from "lucide-react";
 
 export interface WorkerRow {
   id: string;
   name: string;
   cpf?: string | null;
   phone: string;
+  rg?: string | null;
+  address?: string | null;
+  neighborhood?: string | null;
   city: string;
+  state?: string | null;
+  zipCode?: string | null;
+  extension?: string | null;
+  accessLevelId?: string | null;
+  workerRoleIds?: string[];
   mustChangePassword: boolean;
 }
 
@@ -26,9 +34,17 @@ interface WorkersTableProps {
   error: string | null;
   search: string;
   onReissue: (worker: WorkerRow) => void;
+  onEdit: (worker: WorkerRow) => void;
 }
 
-export function WorkersTable({ workers, loading, error, search, onReissue }: WorkersTableProps) {
+export function WorkersTable({
+  workers,
+  loading,
+  error,
+  search,
+  onReissue,
+  onEdit,
+}: WorkersTableProps) {
   const filtered = workers.filter((w) => {
     if (!search) return true;
     const q = search.toLowerCase();
@@ -59,7 +75,9 @@ export function WorkersTable({ workers, loading, error, search, onReissue }: Wor
   if (filtered.length === 0) {
     return (
       <div className="rounded-lg border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">
-        {workers.length === 0 ? "Nenhum colaborador cadastrado." : "Nenhum resultado para a busca."}
+        {workers.length === 0
+          ? "Nenhum colaborador cadastrado."
+          : "Nenhum resultado para a busca."}
       </div>
     );
   }
@@ -74,7 +92,7 @@ export function WorkersTable({ workers, loading, error, search, onReissue }: Wor
             <TableHead>Telefone</TableHead>
             <TableHead>Cidade</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead className="w-[80px]">Ações</TableHead>
+            <TableHead className="w-[120px]">Ações</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -92,14 +110,24 @@ export function WorkersTable({ workers, loading, error, search, onReissue }: Wor
                 )}
               </TableCell>
               <TableCell>
-                <button
-                  type="button"
-                  onClick={() => onReissue(w)}
-                  className="rounded-md p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors"
-                  title="Reemitir senha temporária"
-                >
-                  <KeyRound className="h-4 w-4" />
-                </button>
+                <div className="flex gap-1">
+                  <button
+                    type="button"
+                    onClick={() => onEdit(w)}
+                    className="rounded-md p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                    title="Editar colaborador"
+                  >
+                    <Edit2 className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onReissue(w)}
+                    className="rounded-md p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                    title="Reemitir senha temporária"
+                  >
+                    <KeyRound className="h-4 w-4" />
+                  </button>
+                </div>
               </TableCell>
             </TableRow>
           ))}
