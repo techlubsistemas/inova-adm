@@ -155,7 +155,8 @@ export default function UsuariosPage() {
     if (res.status === 200) {
       setTempPw({ name, password: res.body?.tempPassword ?? "" });
       toast.success("Senha temporária reemitida.");
-      type === "worker" ? fetchWorkers() : fetchAdmins();
+      if (type === "worker") fetchWorkers();
+      else fetchAdmins();
     } else {
       toast.error(res.body?.message || "Erro ao reemitir senha.");
     }
