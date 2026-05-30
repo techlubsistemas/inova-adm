@@ -21,6 +21,7 @@ import {
   CalendarDays,
   ChevronLeft,
   ClipboardList,
+  Droplets,
   GraduationCap,
   Hammer,
   LayoutGrid,
@@ -87,6 +88,13 @@ const menuItems: MenuItem[] = [
     href: "/treinamentos",
     enabled: true,
     module: "TREINAMENTOS",
+  },
+  {
+    icon: Droplets,
+    label: "Análise de Óleo",
+    href: "/analise-oleo",
+    enabled: true,
+    module: "ANALISE_OLEO",
   },
   {
     icon: Building2,

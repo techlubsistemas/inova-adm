@@ -50,6 +50,8 @@ test("super admin: vê 'Empresas' e gerencia módulos contratados", async ({
   await expect(
     page.getByRole("heading", { name: /Módulos Contratados/i }),
   ).toBeVisible();
-  await expect(page.getByText("Cadastros", { exact: true })).toBeVisible();
-  await expect(page.getByText("Análise de Óleo", { exact: true })).toBeVisible();
+  // Escopado ao conteúdo (o label "Análise de Óleo" também existe na sidebar).
+  const main = page.getByRole("main");
+  await expect(main.getByText("Cadastros", { exact: true })).toBeVisible();
+  await expect(main.getByText("Análise de Óleo", { exact: true })).toBeVisible();
 });
