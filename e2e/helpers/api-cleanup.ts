@@ -5,10 +5,11 @@
  */
 
 import { request, type APIRequestContext } from "@playwright/test";
+import { CREDS } from "../fixtures";
 
 const API_URL = process.env.E2E_API_URL ?? "http://localhost:3333";
-const E2E_EMAIL = process.env.E2E_EMAIL ?? "admin@alpha.com";
-const E2E_PASSWORD = process.env.E2E_PASSWORD ?? "Senha@123";
+const E2E_EMAIL = process.env.E2E_EMAIL ?? CREDS.companyAdmin.email;
+const E2E_PASSWORD = process.env.E2E_PASSWORD ?? CREDS.companyAdmin.password;
 
 let cachedToken: string | null = null;
 

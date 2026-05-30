@@ -7,9 +7,10 @@
  */
 
 import { type Page, type BrowserContext, expect } from "@playwright/test";
+import { CREDS } from "../fixtures";
 
-export const E2E_EMAIL = process.env.E2E_EMAIL ?? "admin@alpha.com";
-export const E2E_PASSWORD = process.env.E2E_PASSWORD ?? "Senha@123";
+export const E2E_EMAIL = process.env.E2E_EMAIL ?? CREDS.companyAdmin.email;
+export const E2E_PASSWORD = process.env.E2E_PASSWORD ?? CREDS.companyAdmin.password;
 
 export async function login(page: Page) {
   await page.goto("/login");
