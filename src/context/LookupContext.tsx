@@ -121,17 +121,23 @@ export const LOOKUP_REGISTRY: Record<LookupKey, LookupRegistryEntry> = {
     endpoint: "unit",
     listKey: "units",
     companyScoped: false,
-    inlineCreate: true,
+    inlineCreate: false,
     label: "Unidade",
     category: "Materiais e Fluidos",
+    extraFields: [
+      { key: "symbol", label: "Símbolo", type: "text", required: true, placeholder: "Ex: L" },
+    ],
   },
   "power-unit": {
     endpoint: "power-unit",
     listKey: "powerUnits",
     companyScoped: false,
-    inlineCreate: true,
+    inlineCreate: false,
     label: "Unidade de Potência",
     category: "Materiais e Fluidos",
+    extraFields: [
+      { key: "symbol", label: "Símbolo", type: "text", required: true, placeholder: "Ex: CV" },
+    ],
   },
   "main-component": {
     endpoint: "main-component",
@@ -237,17 +243,23 @@ export const LOOKUP_REGISTRY: Record<LookupKey, LookupRegistryEntry> = {
     endpoint: "service-procedure",
     listKey: "serviceProcedures",
     companyScoped: false,
-    inlineCreate: true,
+    inlineCreate: false,
     label: "Procedimento",
     category: "Serviço",
+    extraFields: [
+      { key: "code", label: "Código", type: "text", required: true, placeholder: "Ex: PR-001" },
+    ],
   },
   "execution-time": {
     endpoint: "execution-time",
     listKey: "executionTimes",
     companyScoped: false,
-    inlineCreate: true,
+    inlineCreate: false,
     label: "Tempo de Execução",
     category: "Serviço",
+    extraFields: [
+      { key: "minutes", label: "Minutos", type: "number", required: true, placeholder: "Ex: 30" },
+    ],
   },
   "job-system": {
     endpoint: "job-system",
@@ -261,9 +273,12 @@ export const LOOKUP_REGISTRY: Record<LookupKey, LookupRegistryEntry> = {
     endpoint: "meter",
     listKey: "meters",
     companyScoped: false,
-    inlineCreate: true,
+    inlineCreate: false,
     label: "Medidor",
     category: "Serviço",
+    extraFields: [
+      { key: "complement", label: "Complemento", type: "text", required: true, placeholder: "Ex: h" },
+    ],
   },
   period: {
     endpoint: "period",
