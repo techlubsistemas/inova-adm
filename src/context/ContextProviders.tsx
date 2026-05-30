@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { ApiContextProvider } from "./ApiContext";
 import { AuthProvider } from "./AuthContext";
 import { CompanyProvider } from "./CompanyContext";
+import { EntitlementProvider } from "./EntitlementContext";
 import { LookupProvider } from "./LookupContext";
 
 export function ContextProviders({ children }: { children: React.ReactNode }) {
@@ -12,7 +13,9 @@ export function ContextProviders({ children }: { children: React.ReactNode }) {
       <AuthProvider>
         <ApiContextProvider>
           <CompanyProvider>
-            <LookupProvider>{children}</LookupProvider>
+            <EntitlementProvider>
+              <LookupProvider>{children}</LookupProvider>
+            </EntitlementProvider>
           </CompanyProvider>
         </ApiContextProvider>
       </AuthProvider>

@@ -7,11 +7,17 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useAuth } from "@/context/AuthContext";
+import { useCompany } from "@/context/CompanyContext";
+import {
+  type CompanyModule,
+  useEntitlements,
+} from "@/context/EntitlementContext";
 import { useAdminProfile } from "@/hooks/useAdminProfile";
 import { cn } from "@/lib/utils";
 import {
   AlertTriangle,
   Boxes,
+  Building2,
   CalendarDays,
   ChevronLeft,
   ClipboardList,
@@ -19,6 +25,7 @@ import {
   LayoutGrid,
   Lock,
   LogOut,
+  type LucideIcon,
   Map,
   Menu,
   Network,
@@ -31,34 +38,55 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
-const menuItems = [
-  { icon: Network, label: "Estrutura", href: "/estrutura", enabled: true },
-  { icon: Wrench, label: "Equipamentos", href: "/equipamentos", enabled: true },
-  { icon: Boxes, label: "Modelos", href: "/modelos", enabled: true },
-  { icon: Map, label: "Áreas", href: "/areas", enabled: true },
-  { icon: LayoutGrid, label: "Setores", href: "/setores", enabled: true },
-  { icon: Hammer, label: "Serviços", href: "/servicos", enabled: true },
-  { icon: Route, label: "Planejamento", href: "/planejamento", enabled: true },
+interface MenuItem {
+  icon: LucideIcon;
+  label: string;
+  href: string;
+  enabled: boolean;
+  /** Módulo exigido (entitlement). Sem módulo = sempre visível. */
+  module?: CompanyModule;
+  /** Visível apenas para o super admin. */
+  superAdminOnly?: boolean;
+}
+
+const menuItems: MenuItem[] = [
+  { icon: Network, label: "Estrutura", href: "/estrutura", enabled: true, module: "CADASTROS" },
+  { icon: Wrench, label: "Equipamentos", href: "/equipamentos", enabled: true, module: "CADASTROS" },
+  { icon: Boxes, label: "Modelos", href: "/modelos", enabled: true, module: "CADASTROS" },
+  { icon: Map, label: "Áreas", href: "/areas", enabled: true, module: "CADASTROS" },
+  { icon: LayoutGrid, label: "Setores", href: "/setores", enabled: true, module: "CADASTROS" },
+  { icon: Hammer, label: "Serviços", href: "/servicos", enabled: true, module: "CADASTROS" },
+  { icon: Route, label: "Planejamento", href: "/planejamento", enabled: true, module: "PLANEJAMENTO" },
   {
     icon: CalendarDays,
     label: "Programação",
     href: "/programacao",
     enabled: true,
+    module: "PLANEJAMENTO",
   },
   {
     icon: ClipboardList,
     label: "Ordens de Serviço",
     href: "/ordens-servico",
     enabled: true,
+    module: "ORDENS_SERVICO",
   },
   {
     icon: AlertTriangle,
     label: "Anomalias",
     href: "/anomalias",
     enabled: true,
+    module: "ANOMALIAS",
   },
   { icon: Users, label: "Usuários", href: "/usuarios", enabled: true },
-  { icon: Sliders, label: "Parâmetros", href: "/parametros", enabled: true },
+  { icon: Sliders, label: "Parâmetros", href: "/parametros", enabled: true, module: "CADASTROS" },
+  {
+    icon: Building2,
+    label: "Empresas",
+    href: "/empresas",
+    enabled: true,
+    superAdminOnly: true,
+  },
 ];
 
 export function Sidebar() {
@@ -69,6 +97,14 @@ export function Sidebar() {
   const { signOut } = useAuth();
   const { profile, loading, initials, roleLabel } = useAdminProfile();
   const router = useRouter();
+  const { isSuperAdmin } = useCompany();
+  const { hasModule } = useEntitlements();
+
+  const visibleItems = menuItems.filter((item) => {
+    if (item.superAdminOnly && !isSuperAdmin) return false;
+    if (item.module && !hasModule(item.module)) return false;
+    return true;
+  });
 
   const handleLogout = () => {
     setUserMenuOpen(false);
@@ -105,7 +141,7 @@ export function Sidebar() {
       {/* Menu */}
       <nav className="flex-1 space-y-2 overflow-y-auto px-3 py-6">
         <TooltipProvider>
-          {menuItems.map((item) => {
+          {visibleItems.map((item) => {
             const isActive = pathname === item.href && item.enabled;
             const isDisabled = !item.enabled;
             const enabledLinkClass = cn(
