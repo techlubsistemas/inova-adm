@@ -21,6 +21,7 @@ import {
   CalendarDays,
   ChevronLeft,
   ClipboardList,
+  GraduationCap,
   Hammer,
   LayoutGrid,
   Lock,
@@ -80,6 +81,13 @@ const menuItems: MenuItem[] = [
   },
   { icon: Users, label: "Usuários", href: "/usuarios", enabled: true },
   { icon: Sliders, label: "Parâmetros", href: "/parametros", enabled: true, module: "CADASTROS" },
+  {
+    icon: GraduationCap,
+    label: "Treinamentos",
+    href: "/treinamentos",
+    enabled: true,
+    module: "TREINAMENTOS",
+  },
   {
     icon: Building2,
     label: "Empresas",
