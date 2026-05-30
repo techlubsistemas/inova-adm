@@ -1,7 +1,15 @@
 "use client";
 
+import { useApiContext } from "@/context/ApiContext";
+import { useCompany } from "@/context/CompanyContext";
 import { cn } from "@/lib/utils";
-import { AlertTriangle, CheckCircle2, Factory } from "lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  ClipboardList,
+  Factory,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface KPICardProps {
   title: string;
@@ -63,33 +71,84 @@ function KPICard({
   );
 }
 
+interface DashboardSummary {
+  backlog: { overdue: number; open: number };
+  adherence: { planned: number; completed: number; percent: number | null };
+  anomalies: { open: number; mttrDays: number | null };
+  supplies: { belowMin: number };
+  equipment: { total: number; critical: number };
+}
+
 export function DashboardKPIs() {
+  const { GetAPI } = useApiContext();
+  const { effectiveCompanyId } = useCompany();
+  const [data, setData] = useState<DashboardSummary | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    const qs = effectiveCompanyId
+      ? `?companyId=${encodeURIComponent(effectiveCompanyId)}`
+      : "";
+    GetAPI(`/dashboard/summary${qs}`, true).then((res) => {
+      if (!active) return;
+      if (res.status === 200) setData(res.body as DashboardSummary);
+      setLoading(false);
+    });
+    return () => {
+      active = false;
+    };
+  }, [GetAPI, effectiveCompanyId]);
+
+  const num = (v: number | null | undefined) =>
+    loading ? "…" : v == null ? "—" : String(v);
+
   return (
-    <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
       <KPICard
-        title="Status da Planta"
-        value="92% Operacional"
-        description="4 Equipamentos em parada"
-        icon={Factory}
-        trend="down"
-        trendValue="2%"
-        color="primary"
+        title="Backlog (OS atrasadas)"
+        value={num(data?.backlog.overdue)}
+        description={loading ? "Carregando..." : `${data?.backlog.open ?? 0} OS em aberto`}
+        icon={ClipboardList}
+        color="red"
       />
       <KPICard
-        title="Aderência ao Plano"
-        value="87%"
-        description="12 Ordens atrasadas nesta semana"
+        title="Aderência ao Plano (30d)"
+        value={
+          loading
+            ? "…"
+            : data?.adherence.percent == null
+              ? "—"
+              : `${data.adherence.percent}%`
+        }
+        description={
+          loading
+            ? ""
+            : `${data?.adherence.completed ?? 0}/${data?.adherence.planned ?? 0} concluídas no prazo`
+        }
         icon={CheckCircle2}
-        trend="up"
-        trendValue="5%"
         color="green"
       />
       <KPICard
-        title="Anomalias Críticas"
-        value="3"
-        description="Ação imediata necessária"
+        title="Anomalias Abertas"
+        value={num(data?.anomalies.open)}
+        description={
+          loading
+            ? ""
+            : data?.anomalies.mttrDays != null
+              ? `MTTR ${data.anomalies.mttrDays} dias`
+              : "Sem anomalias resolvidas ainda"
+        }
         icon={AlertTriangle}
-        color="red"
+        color="primary"
+      />
+      <KPICard
+        title="Equipamentos"
+        value={num(data?.equipment.total)}
+        description={loading ? "" : `${data?.equipment.critical ?? 0} críticos (A)`}
+        icon={Factory}
+        color="blue"
       />
     </div>
   );
