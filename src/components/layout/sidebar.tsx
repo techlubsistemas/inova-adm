@@ -24,6 +24,7 @@ import {
   Droplets,
   GraduationCap,
   Hammer,
+  LayoutDashboard,
   LayoutGrid,
   Lock,
   LogOut,
@@ -52,6 +53,7 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
+  { icon: LayoutDashboard, label: "Dashboard", href: "/", enabled: true },
   { icon: Network, label: "Estrutura", href: "/estrutura", enabled: true, module: "CADASTROS" },
   { icon: Wrench, label: "Equipamentos", href: "/equipamentos", enabled: true, module: "CADASTROS" },
   { icon: Boxes, label: "Modelos", href: "/modelos", enabled: true, module: "CADASTROS" },

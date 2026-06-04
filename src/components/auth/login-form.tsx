@@ -113,7 +113,7 @@ export default function LoginForm() {
         await signIn(accessToken);
         reset();
         toast.success("Login realizado com sucesso.");
-        router.push("/planejamento");
+        router.push("/");
       } else {
         const msg = (response.body as { message?: string })?.message || "Erro ao fazer login. Verifique suas credenciais.";
         setError(msg);
