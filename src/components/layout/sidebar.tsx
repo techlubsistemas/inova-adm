@@ -53,7 +53,7 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-  { icon: LayoutDashboard, label: "Dashboard", href: "/", enabled: true },
+  { icon: LayoutDashboard, label: "Dashboard", href: "/", enabled: true, module: "DASHBOARD" },
   { icon: Network, label: "Estrutura", href: "/estrutura", enabled: true, module: "CADASTROS" },
   { icon: Wrench, label: "Equipamentos", href: "/equipamentos", enabled: true, module: "CADASTROS" },
   { icon: Boxes, label: "Modelos", href: "/modelos", enabled: true, module: "CADASTROS" },
