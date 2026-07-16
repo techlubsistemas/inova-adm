@@ -23,6 +23,7 @@ const ROUTE_MODULE: { prefix: string; module?: CompanyModule }[] = [
   { prefix: "/ordens-servico", module: "ORDENS_SERVICO" },
   { prefix: "/anomalias", module: "ANOMALIAS" },
   { prefix: "/treinamentos", module: "TREINAMENTOS" },
+  { prefix: "/academia", module: "ACADEMIA" },
   { prefix: "/analise-oleo", module: "ANALISE_OLEO" },
   { prefix: "/usuarios", module: undefined },
   { prefix: "/empresas", module: undefined },
@@ -36,6 +37,7 @@ const LANDING_ORDER: { href: string; module?: CompanyModule }[] = [
   { href: "/ordens-servico", module: "ORDENS_SERVICO" },
   { href: "/anomalias", module: "ANOMALIAS" },
   { href: "/treinamentos", module: "TREINAMENTOS" },
+  { href: "/academia", module: "ACADEMIA" },
   { href: "/analise-oleo", module: "ANALISE_OLEO" },
   { href: "/usuarios", module: undefined },
 ];

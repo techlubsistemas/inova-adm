@@ -18,7 +18,8 @@ export type CompanyModule =
   | "ANOMALIAS"
   | "DASHBOARD"
   | "TREINAMENTOS"
-  | "ANALISE_OLEO";
+  | "ANALISE_OLEO"
+  | "ACADEMIA";
 
 export const ALL_MODULES: CompanyModule[] = [
   "CADASTROS",
@@ -28,7 +29,10 @@ export const ALL_MODULES: CompanyModule[] = [
   "DASHBOARD",
   "TREINAMENTOS",
   "ANALISE_OLEO",
+  "ACADEMIA",
 ];
+
+const LEGACY_MODULES = ALL_MODULES.filter((module) => module !== "ACADEMIA");
 
 export const MODULE_LABELS: Record<CompanyModule, string> = {
   CADASTROS: "Cadastros",
@@ -36,8 +40,9 @@ export const MODULE_LABELS: Record<CompanyModule, string> = {
   ORDENS_SERVICO: "Ordens de Serviço",
   ANOMALIAS: "Anomalias",
   DASHBOARD: "Dashboard",
-  TREINAMENTOS: "Treinamentos",
+  TREINAMENTOS: "Treinamentos Operacionais",
   ANALISE_OLEO: "Análise de Óleo",
+  ACADEMIA: "Academia Inova",
 };
 
 interface EntitlementContextValue {
@@ -68,13 +73,13 @@ export function EntitlementProvider({
   const { GetAPI } = useApiContext();
   const { effectiveCompanyId, isSuperAdmin } = useCompany();
   const [enabledModules, setEnabledModules] =
-    useState<CompanyModule[]>(ALL_MODULES);
+    useState<CompanyModule[]>(LEGACY_MODULES);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Super admin não é gateado — enxerga todos os módulos.
     if (!token || isSuperAdmin) {
-      setEnabledModules(ALL_MODULES);
+      setEnabledModules(isSuperAdmin ? ALL_MODULES : LEGACY_MODULES);
       setLoading(false);
       return;
     }
@@ -85,7 +90,7 @@ export function EntitlementProvider({
       if (res.status === 200 && Array.isArray(res.body?.modules)) {
         setEnabledModules(res.body.modules as CompanyModule[]);
       } else {
-        setEnabledModules(ALL_MODULES);
+        setEnabledModules(isSuperAdmin ? ALL_MODULES : LEGACY_MODULES);
       }
       setLoading(false);
     });

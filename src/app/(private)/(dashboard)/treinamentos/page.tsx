@@ -84,10 +84,10 @@ export default function TreinamentosPage() {
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-            Treinamentos
+            Treinamentos Operacionais
           </h1>
           <p className="text-slate-500">
-            Catálogo de treinamentos vinculados a funções e gestão de conclusão.
+            Capacitações obrigatórias vinculadas às funções dos colaboradores.
           </p>
         </div>
         {tab === "catalogo" && isSuperAdmin && (
